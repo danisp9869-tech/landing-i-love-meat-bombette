@@ -77,9 +77,11 @@ a{color:inherit}
     -webkit-mask-image:linear-gradient(180deg,#000 68%,transparent 100%);
     mask-image:linear-gradient(180deg,#000 68%,transparent 100%)}
   .hero .lead{font-size:17px}
-  /* "Martina Franca è arrivata a Pianezza" è lungo: su iPhone stretto andrebbe
-     a capo dentro la pillola. Stringo testo e spaziatura per tenerlo su una riga */
-  .hero .badge{font-size:11px;letter-spacing:.04em;padding:7px 12px}
+  /* "Martina Franca è arrivata a Pianezza" è lungo: a 11px andava a capo dentro
+     la pillola sui telefoni stretti (a 320px il testo chiedeva più dei 280px
+     disponibili). A 10px con spaziatura e padding ridotti sta su una riga anche
+     lì, con ~19px di margine. */
+  .hero .badge{font-size:10px;letter-spacing:.02em;padding:6px 11px;gap:6px}
   .hero .cta-row{flex-direction:column;gap:18px}
   .hero .cta-row .btn{width:100%;max-width:360px;font-size:24px;padding:19px 24px}
   .hero .rate{text-align:center;font-size:14px}
