@@ -97,6 +97,11 @@ function trEmail_(label, value) {
 }
 
 // Utile per verificare che l'app sia pubblicata: apri l'URL nel browser.
+// La versione serve a capire da fuori QUALE codice è effettivamente pubblicato:
+// salvare in Apps Script non basta, bisogna anche ridistribuire. Se qui non
+// leggi "v2", la distribuzione è ferma alla versione senza colonna Offerta.
 function doGet() {
-  return ContentService.createTextOutput('I Love Meat — endpoint prenotazioni CENA attivo');
+  return ContentService.createTextOutput(
+    'I Love Meat — endpoint prenotazioni CENA attivo · v2 (colonna Offerta)'
+  );
 }
