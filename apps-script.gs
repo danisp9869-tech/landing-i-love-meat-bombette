@@ -20,10 +20,21 @@ function doPost(e) {
     // Tutte le prenotazioni di questa landing in un'unica lista
     var sheet = ss.getSheetByName('Prenotazioni') || ss.insertSheet('Prenotazioni');
 
-    // Intestazioni alla prima riga (solo se la scheda è vuota)
+    // "Offerta" è l'ULTIMA colonna, dopo "Creata": aggiungendola in fondo le
+    // righe già presenti nel foglio restano allineate. Le prenotazioni arrivate
+    // prima di questa modifica avranno la cella vuota.
+    var INTESTAZIONI = ['Data', 'Ora', 'Persone', 'Nome', 'Telefono', 'Email', 'Richieste', 'Privacy', 'Creata', 'Offerta'];
+
     if (sheet.getLastRow() === 0) {
-      sheet.appendRow(['Data', 'Ora', 'Persone', 'Nome', 'Telefono', 'Email', 'Richieste', 'Privacy', 'Creata']);
+      sheet.appendRow(INTESTAZIONI);
       sheet.setFrozenRows(1);
+    } else {
+      // Foglio creato prima che esistesse la colonna: la aggiunge una volta sola
+      var ultimaCol = sheet.getLastColumn();
+      var testate = sheet.getRange(1, 1, 1, ultimaCol).getValues()[0];
+      if (testate.indexOf('Offerta') === -1) {
+        sheet.getRange(1, ultimaCol + 1).setValue('Offerta');
+      }
     }
 
     sheet.appendRow([
@@ -35,12 +46,13 @@ function doPost(e) {
       p.email || '',
       p.richieste || '',
       p.privacy || '',
-      new Date()
+      new Date(),
+      p.offerta || ''   // "Bombette" o "Degustazione", inviata dalla landing
     ]);
 
     // Notifica email al ristorante (se fallisce, la prenotazione resta comunque salvata)
     try {
-      var subj = '🍖 Nuova prenotazione — ' + (p.nome || '') +
+      var subj = '🍖 ' + (p.offerta ? p.offerta + ' — ' : '') + 'Nuova prenotazione — ' + (p.nome || '') +
                  ' · ' + (p.data || '') + ' ' + (p.ora || '') +
                  ' · ' + (p.persone || '') + 'p';
       var html =
@@ -48,6 +60,7 @@ function doPost(e) {
           '<h2 style="margin:0 0 4px">Nuova prenotazione — I Love Meat</h2>' +
           '<p style="margin:0 0 14px;color:#666">Ricevuta dal sito delle prenotazioni</p>' +
           '<table cellpadding="7" style="border-collapse:collapse;border:1px solid #eee">' +
+            trEmail_('Offerta', p.offerta) +
             trEmail_('Data', p.data) +
             trEmail_('Orario', p.ora) +
             trEmail_('Persone', p.persone) +
