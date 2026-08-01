@@ -435,9 +435,7 @@ src="https://www.facebook.com/tr?id=1752658912398511&ev=PageView&noscript=1"
     <h2 class="display">Trovaci qui</h2>
     <div class="find-grid">
       <div class="hours">
-        <div class="row"><span>Lunedì – Venerdì</span><span>12:00–14:00 · 19:30–00:00</span></div>
-        <div class="row"><span>Sabato</span><span>Solo cena · 19:30–00:00</span></div>
-        <div class="row"><span>Domenica</span><span>12:00–14:00 · 19:30–00:00</span></div>
+        <div class="row"><span>Lunedì – Domenica</span><span>19:30–00:00</span></div>
         <div class="row addr"><span>Indirizzo</span><a href="https://www.google.com/maps/search/?api=1&query=Largo+II+Giugno+2+Pianezza+TO" target="_blank" rel="noopener">Largo II Giugno 2, Pianezza (TO)</a></div>
       </div>
       <div class="map">
@@ -469,13 +467,14 @@ src="https://www.facebook.com/tr?id=1752658912398511&ev=PageView&noscript=1"
 window.LP_CONFIG = (function () {
   var booked = {}; // nessuna prenotazione simulata: tutti gli orari disponibili
   return {
-    capacity: 60,        // coperti totali (pranzo + cena)
+    capacity: 60,        // coperti totali della serata
     gap: 0,              // margine oltre la capienza (0 = mai overbooking)
     phone: "+393456881360",
     // URL dell'app Google Apps Script che scrive nel foglio (link "/exec")
     sheetUrl: "https://script.google.com/macros/s/AKfycbyCVTPWs0z8ZCcdUy3e2j_WC8bWwWa2U4u-LCbhEfsFxL3ErGv2zX8V0OzVZi_Rl6j0Zg/exec",
-    // Orari I Love Meat: Lun–Dom 12:00–14:00 / 19:30–00:00 · Sabato pranzo chiuso
-    lunch: ["12:00","12:30","13:00","13:30","14:00"],
+    // Ad agosto il ristorante è aperto solo a cena: la lista del pranzo è vuota
+    // di proposito. Per riaprirlo basta rimettere qui gli orari.
+    lunch: [],
     dinner: ["19:30","20:00","20:30","21:00","21:30","22:00","22:30","23:00","23:30"],
     offerName: "Bombette Pugliesi",
     // Finisce nella colonna "Offerta" del foglio, condiviso con la degustazione.
@@ -494,7 +493,7 @@ window.LP_CONFIG = (function () {
   var SHEET_URL = (C.sheetUrl && C.sheetUrl.indexOf("http")===0) ? C.sheetUrl : "";
   var OFFER = C.offerName || "Bombette Pugliesi";
   var OFFER_TAG = C.offerTag || "Bombette";
-  var LUNCH = C.lunch || ["12:00","12:30","13:00","13:30","14:00"];
+  var LUNCH = C.lunch || [];   // vuoto: ad agosto si prenota solo la cena
   var DINNER = C.dinner || ["19:30","20:00","20:30","21:00","21:30","22:00","22:30","23:00","23:30"];
   var BOOKED = C.booked || {};
   var ALL_SLOTS = LUNCH.concat(DINNER);
@@ -519,8 +518,10 @@ window.LP_CONFIG = (function () {
 
   // Perché un orario non è prenotabile: "" = libero, altrimenti il motivo mostrato sul tasto
   function slotState(date,slot,people){
-    var p=date.split("-"); var dow=new Date(+p[0],+p[1]-1,+p[2]).getDay(); // 0=dom … 6=sab
-    if(dow===6&&LUNCH.indexOf(slot)>=0) return "chiuso";                   // sabato pranzo chiuso
+    // La regola "sabato pranzo chiuso" non serve più: con LUNCH vuoto restano
+    // solo orari di cena, aperti tutti i giorni. Torna utile se si riapre a pranzo.
+    if(LUNCH.length && new Date(+date.split("-")[0],+date.split("-")[1]-1,+date.split("-")[2]).getDay()===6
+       && LUNCH.indexOf(slot)>=0) return "chiuso";
     var now=new Date();
     if(date===iso(now)){                                                   // orario già trascorso
       var hm=slot.split(":");
