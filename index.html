@@ -582,6 +582,9 @@ window.LP_CONFIG = (function () {
   function riempiMartedi(){
     var d=new Date(today), trovati=0;
     dateEl.innerHTML="";
+    var invito=document.createElement("option");
+    invito.value=""; invito.textContent="Seleziona il giorno";
+    dateEl.appendChild(invito);
     // Il martedì di oggi entra solo se ha ancora un orario libero: a serata
     // iniziata la prima voce dev'essere già la settimana dopo.
     for(var i=0;i<120 && trovati<MARTEDI_MOSTRATI;i++){
@@ -629,11 +632,12 @@ window.LP_CONFIG = (function () {
   function renderSlots(){
     var date=dateEl.value, people=parseInt(peopleEl.value,10)||0;
     slotInput.innerHTML="";
-    if(!date||!people){ validate(); return; }
 
     var vuota=document.createElement("option");
     vuota.value=""; vuota.textContent="Scegli un orario";
     slotInput.appendChild(vuota);
+
+    if(!date||!people){ validate(); return; }
 
     ALL_SLOTS.forEach(function(slot){
       var state=slotState(date,slot,people);
