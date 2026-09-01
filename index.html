@@ -238,8 +238,6 @@ a{color:inherit}
 /* font-size 16px obbligatorio: sotto, iOS zooma la pagina al focus */
 .field input,.field select{width:100%;max-width:100%;min-width:0;padding:11px 12px;background:var(--field);border:1px solid var(--bordo);border-radius:10px;color:var(--ink);font-size:16px;font-family:inherit}
 .field input::placeholder{color:#a99f96}
-.field input[type="date"]{-webkit-appearance:none;appearance:none;display:block}
-.field input[type="date"]::-webkit-date-and-time-value{text-align:left}
 .field input:focus,.field select:focus{outline:none;border-color:var(--red);background:#fff}
 .field option:disabled{color:#a99f96}
 .privacy{display:flex;align-items:flex-start;gap:10px;margin:2px 0 14px;color:var(--ink-soft);font-size:12.5px;line-height:1.4;cursor:pointer}
@@ -361,8 +359,8 @@ src="https://www.facebook.com/tr?id=1752658912398511&ev=PageView&noscript=1"
 
     <div class="book" id="book" aria-label="Prenota il tavolo">
       <div class="field">
-        <label for="data">1 · Data <span class="opt">(solo martedì)</span></label>
-        <input type="date" id="data" required>
+        <label for="data">1 · Quale martedì</label>
+        <select id="data" required></select>
       </div>
       <div class="field">
         <label for="persone">2 · Quante persone</label>
@@ -563,27 +561,45 @@ window.LP_CONFIG = (function () {
   // Data locale in formato YYYY-MM-DD: toISOString() userebbe UTC e in Italia
   // (UTC+1/+2) tornerebbe il giorno prima, precompilando una data già passata.
   var iso=function(d){var m=d.getMonth()+1,g=d.getDate();return d.getFullYear()+"-"+(m<10?"0":"")+m+"-"+(g<10?"0":"")+g;};
-  dateEl.min=iso(today); if(!dateEl.value) dateEl.value=iso(today);
-
   // La serata bombette è solo il martedì (0=dom, 1=lun, 2=mar …). È l'unica
   // regola che decide quali giorni sono prenotabili: cambiando questo numero
-  // si sposta la serata, senza toccare altro. null = tutti i giorni.
+  // si sposta la serata, senza toccare altro.
   var GIORNO_SERATA = 2;
+  var MARTEDI_MOSTRATI = 10;   // ~2 mesi e mezzo di serate
   function giornoDi(s){var q=s.split("-");return new Date(+q[0],+q[1]-1,+q[2]).getDay();}
-  function eSerata(s){return GIORNO_SERATA===null||giornoDi(s)===GIORNO_SERATA;}
-  // Primo martedì da una data in poi (compresa). <input type="date"> non sa
-  // limitare per giorno della settimana: l'unica via è correggere la scelta.
-  function prossimaSerata(s){
-    var q=s.split("-"), d=new Date(+q[0],+q[1]-1,+q[2]);
-    for(var i=0;i<14;i++){ if(eSerata(iso(d))) return iso(d); d.setDate(d.getDate()+1); }
-    return s;
+  function eSerata(s){return giornoDi(s)===GIORNO_SERATA;}
+
+  // Elenco a tendina invece del calendario: <input type="date"> non sa
+  // disabilitare i giorni della settimana, quindi lasciava cliccare qualsiasi
+  // data per poi spostarla dopo. Qui i non-martedì non esistono proprio.
+  var MESI=["gennaio","febbraio","marzo","aprile","maggio","giugno","luglio",
+            "agosto","settembre","ottobre","novembre","dicembre"];
+  function etichettaData(s){
+    var q=s.split("-"); var d=new Date(+q[0],+q[1]-1,+q[2]);
+    var testo="martedì "+d.getDate()+" "+MESI[d.getMonth()];
+    return d.getFullYear()!==today.getFullYear() ? testo+" "+d.getFullYear() : testo;
+  }
+  function riempiMartedi(){
+    var d=new Date(today), trovati=0;
+    dateEl.innerHTML="";
+    // Il martedì di oggi entra solo se ha ancora un orario libero: a serata
+    // iniziata la prima voce dev'essere già la settimana dopo.
+    for(var i=0;i<120 && trovati<MARTEDI_MOSTRATI;i++){
+      var s=iso(d);
+      if(eSerata(s) && hasFreeSlot(s,1)){
+        var o=document.createElement("option");
+        o.value=s; o.textContent=etichettaData(s);
+        dateEl.appendChild(o); trovati++;
+      }
+      d.setDate(d.getDate()+1);
+    }
   }
 
   for(var n=1;n<=20;n++){var o=document.createElement("option");o.value=n;o.textContent=n+(n===1?" persona":" persone");peopleEl.appendChild(o);}
   peopleEl.value="2";
 
-  // All'apertura porta la data sul primo giorno prenotabile (se oggi è finito, domani)
-  dateEl.value=firstBookableDate(dateEl.value,parseInt(peopleEl.value,10));
+  // All'apertura si parte dal primo martedì disponibile, che è la prima voce
+  riempiMartedi();
 
   function bookedFor(date,slot){return (BOOKED[date]&&BOOKED[date][slot])?BOOKED[date][slot]:0;}
 
@@ -606,18 +622,6 @@ window.LP_CONFIG = (function () {
     if(!eSerata(date)) return false;   // aperto sì, ma la serata bombette è il martedì
     for(var i=0;i<ALL_SLOTS.length;i++){ if(!slotState(date,ALL_SLOTS[i],people)) return true; }
     return false;
-  }
-
-  // Primo giorno con almeno un orario libero: a fine serata evita di aprire il
-  // form su un oggi tutto esaurito, proponendo direttamente il giorno dopo.
-  function firstBookableDate(date,people){
-    var p=date.split("-"), d=new Date(+p[0],+p[1]-1,+p[2]);
-    for(var i=0;i<14;i++){
-      var s=iso(d);
-      if(hasFreeSlot(s,people)) return s;
-      d.setDate(d.getDate()+1);
-    }
-    return date;
   }
 
   // Gli orari stanno in un menu a tendina: quelli non prenotabili restano
@@ -697,20 +701,7 @@ window.LP_CONFIG = (function () {
   }
 
   // Apre il calendario toccando tutto il campo data (non solo l'iconcina)
-  function openDatePicker(){ try{ if(typeof dateEl.showPicker==="function") dateEl.showPicker(); }catch(e){} }
-  dateEl.addEventListener("click",openDatePicker);
-  dateEl.addEventListener("focus",openDatePicker);
-
-  dateEl.addEventListener("change",function(){
-    startCheckout();
-    // Spostare in silenzio sarebbe peggio che impedire: la data cambierebbe
-    // sotto le dita senza spiegazione. Si sposta E si dice perché.
-    if(dateEl.value && !eSerata(dateEl.value)){
-      dateEl.value=prossimaSerata(dateEl.value);
-      errEl.textContent="La serata bombette è solo il martedì: ti abbiamo spostato a martedì "+fmtDate(dateEl.value)+".";
-    } else { errEl.textContent=""; }
-    renderSlots();
-  });
+  dateEl.addEventListener("change",function(){startCheckout();errEl.textContent="";renderSlots();});
   peopleEl.addEventListener("change",function(){startCheckout();renderSlots();});
   slotInput.addEventListener("change",function(){startCheckout();validate();});
   nameEl.addEventListener("input",function(){startCheckout();validate();});
