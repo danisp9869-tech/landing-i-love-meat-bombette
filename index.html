@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Bombette Pugliesi a Pianezza — I Love Meat</title>
-<meta name="description" content="Le migliori bombette di Martina Franca sono arrivate a Pianezza. Di tutti i gusti: le scegli al banco e te le cuciniamo alla griglia. Prenota il tuo tavolo da I Love Meat, Pianezza (TO).">
+<title>Il Martedì Piovono Bombette — I Love Meat Pianezza</title>
+<meta name="description" content="Ogni martedì sera è la serata bombette da I Love Meat, Pianezza. 6 bombette di Martina Franca a scelta al banco, vino e contorno inclusi a 18,90€. Prenota il tuo posto.">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -82,11 +82,6 @@ a{color:inherit}
     -webkit-mask-image:linear-gradient(180deg,#000 68%,transparent 100%);
     mask-image:linear-gradient(180deg,#000 68%,transparent 100%)}
   .hero .lead{font-size:17px}
-  /* "Martina Franca è arrivata a Pianezza" è lungo: a 11px andava a capo dentro
-     la pillola sui telefoni stretti (a 320px il testo chiedeva più dei 280px
-     disponibili). A 10px con spaziatura e padding ridotti sta su una riga anche
-     lì, con ~19px di margine. */
-  .hero .badge{font-size:10px;letter-spacing:.02em;padding:6px 11px;gap:6px}
   .hero .cta-row{flex-direction:column;gap:18px}
   .hero .cta-row .btn{width:100%;max-width:360px;font-size:24px;padding:19px 24px}
   .hero .rate{text-align:center;font-size:14px}
@@ -294,11 +289,11 @@ src="https://www.facebook.com/tr?id=1752658912398511&ev=PageView&noscript=1"
 <header class="hero">
   <img class="hero-bg" src="bombette-piatto.jpg" alt="Sei bombette pugliesi crude su un piatto nero, pronte per la griglia" onerror="this.style.display='none'">
   <div class="wrap hero-inner">
-    <span class="badge"><span class="dot"></span>Martina Franca è arrivata a Pianezza</span>
-    <h1 class="display">Le bombette<br>pugliesi<br><span class="l2">a Pianezza.</span></h1>
-    <p class="lead">Le migliori bombette di Martina Franca sono arrivate a Pianezza. Di tutti i gusti: le scegli al banco e te le cuciniamo alla griglia.</p>
+    <span class="badge"><span class="dot"></span>a Pianezza</span>
+    <h1 class="display">Il martedì<br>piovono<br><span class="l2">bombette.</span></h1>
+    <p class="lead">Martina Franca è arrivata a Pianezza. Ogni martedì facciamo la serata bombette.</p>
     <div class="cta-row">
-      <a class="btn" href="#book">Prenota il tuo tavolo</a>
+      <a class="btn" href="#book">Partecipa alla serata</a>
       <div class="rate"><span class="stars">★★★★★</span><br><b>4.9</b> · 500+ carnivori soddisfatti</div>
     </div>
   </div>
@@ -318,7 +313,7 @@ src="https://www.facebook.com/tr?id=1752658912398511&ev=PageView&noscript=1"
         <p class="sfida display">Quando le apri<br><span class="l2">godi.</span></p>
         <p class="desc">Scegli <b>6 bombette</b> al banco: ne abbiamo di tutti i gusti, prendi le tue preferite. <b>Il vino e il contorno te li offriamo noi.</b></p>
         <div class="price"><span class="pre">A soli</span>18,90€</div>
-        <p class="valida">Fino a fine agosto — offerta limitata</p>
+        <p class="valida">Valida solo il martedì sera — fino a fine agosto</p>
         <a class="btn" href="#book">Voglio le bombette</a>
         <div class="fine">Posti limitati — di solito sold out — prenota ora</div>
       </div>
@@ -340,7 +335,7 @@ src="https://www.facebook.com/tr?id=1752658912398511&ev=PageView&noscript=1"
 
     <div class="book" id="book" aria-label="Prenota il tavolo">
       <div class="field">
-        <label for="data">1 · Data</label>
+        <label for="data">1 · Data <span class="opt">(solo martedì)</span></label>
         <input type="date" id="data" required>
       </div>
       <div class="field">
@@ -517,6 +512,20 @@ window.LP_CONFIG = (function () {
   var iso=function(d){var m=d.getMonth()+1,g=d.getDate();return d.getFullYear()+"-"+(m<10?"0":"")+m+"-"+(g<10?"0":"")+g;};
   dateEl.min=iso(today); if(!dateEl.value) dateEl.value=iso(today);
 
+  // La serata bombette è solo il martedì (0=dom, 1=lun, 2=mar …). È l'unica
+  // regola che decide quali giorni sono prenotabili: cambiando questo numero
+  // si sposta la serata, senza toccare altro. null = tutti i giorni.
+  var GIORNO_SERATA = 2;
+  function giornoDi(s){var q=s.split("-");return new Date(+q[0],+q[1]-1,+q[2]).getDay();}
+  function eSerata(s){return GIORNO_SERATA===null||giornoDi(s)===GIORNO_SERATA;}
+  // Primo martedì da una data in poi (compresa). <input type="date"> non sa
+  // limitare per giorno della settimana: l'unica via è correggere la scelta.
+  function prossimaSerata(s){
+    var q=s.split("-"), d=new Date(+q[0],+q[1]-1,+q[2]);
+    for(var i=0;i<14;i++){ if(eSerata(iso(d))) return iso(d); d.setDate(d.getDate()+1); }
+    return s;
+  }
+
   for(var n=1;n<=20;n++){var o=document.createElement("option");o.value=n;o.textContent=n+(n===1?" persona":" persone");peopleEl.appendChild(o);}
   peopleEl.value="2";
 
@@ -541,6 +550,7 @@ window.LP_CONFIG = (function () {
   }
 
   function hasFreeSlot(date,people){
+    if(!eSerata(date)) return false;   // aperto sì, ma la serata bombette è il martedì
     for(var i=0;i<ALL_SLOTS.length;i++){ if(!slotState(date,ALL_SLOTS[i],people)) return true; }
     return false;
   }
@@ -638,7 +648,16 @@ window.LP_CONFIG = (function () {
   dateEl.addEventListener("click",openDatePicker);
   dateEl.addEventListener("focus",openDatePicker);
 
-  dateEl.addEventListener("change",function(){startCheckout();renderSlots();});
+  dateEl.addEventListener("change",function(){
+    startCheckout();
+    // Spostare in silenzio sarebbe peggio che impedire: la data cambierebbe
+    // sotto le dita senza spiegazione. Si sposta E si dice perché.
+    if(dateEl.value && !eSerata(dateEl.value)){
+      dateEl.value=prossimaSerata(dateEl.value);
+      errEl.textContent="La serata bombette è solo il martedì: ti abbiamo spostato a martedì "+fmtDate(dateEl.value)+".";
+    } else { errEl.textContent=""; }
+    renderSlots();
+  });
   peopleEl.addEventListener("change",function(){startCheckout();renderSlots();});
   slotInput.addEventListener("change",function(){startCheckout();validate();});
   nameEl.addEventListener("input",function(){startCheckout();validate();});
