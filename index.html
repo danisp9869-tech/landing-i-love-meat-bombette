@@ -116,6 +116,14 @@ a{color:inherit}
 .offer .sfida .l2{color:var(--red)}
 .offer .price s{display:inline-block;margin-right:14px;color:var(--muted);font-size:.46em;vertical-align:middle;
   text-decoration-line:line-through;text-decoration-color:var(--red);text-decoration-thickness:.07em}
+/* Riepilogo attaccato al prezzo: cosa comprendono i 18,90€, in tre righe che
+   si leggono con un colpo d'occhio invece che dentro il paragrafo sopra.
+   Spunte in oro come il prezzo, per legarlo visivamente alla cifra. */
+.offer .incluso{list-style:none;margin:16px 0 0;display:grid;gap:8px}
+.offer .incluso li{display:flex;align-items:center;gap:10px;font-size:15.5px;color:var(--text);line-height:1.3}
+.offer .incluso li::before{content:"✓";flex:0 0 auto;width:20px;height:20px;border-radius:50%;
+  background:rgba(255,194,51,.15);color:var(--gold);font-size:12px;font-weight:800;
+  display:flex;align-items:center;justify-content:center}
 .offer .valida{margin-top:8px;color:var(--red);font-size:12.5px;font-weight:800;letter-spacing:.12em;text-transform:uppercase}
 .offer-foto{position:relative;z-index:1;border-radius:16px;overflow:hidden;border:1px solid var(--line);min-height:380px}
 .offer-foto img{width:100%;height:100%;object-fit:cover}
@@ -136,6 +144,10 @@ a{color:inherit}
   .offerta-titolo{text-align:center}
   .offer p.desc{margin:0 auto 26px}
   .offer .price{margin-top:4px}
+  /* Card centrata, ma le voci vanno allineate FRA LORO: centrandole una per
+     una le spunte formerebbero una scaletta storta. Blocco largo quanto serve
+     e centrato, testo a sinistra. */
+  .offer .incluso{justify-items:start;width:max-content;max-width:100%;margin-left:auto;margin-right:auto}
   .offer-foto{min-height:230px}
   .offer .btn{width:100%;max-width:360px}
 }
@@ -312,8 +324,13 @@ src="https://www.facebook.com/tr?id=1752658912398511&ev=PageView&noscript=1"
           Bombette <span class="l2">Pugliesi</span>
         </h2>
         <p class="sfida display">Quando le apri<br><span class="l2">godi.</span></p>
-        <p class="desc">Ogni martedì sera <b>6 bombette a scelta</b>: ne abbiamo di tutti i gusti, prendi le tue preferite. <b>Contorno e calice di vino inclusi.</b></p>
+        <p class="desc">Ogni martedì sera <b>6 bombette a scelta</b>: ne abbiamo di tutti i gusti, prendi le tue preferite.</p>
         <div class="price"><span class="pre">A soli</span>18,90€</div>
+        <ul class="incluso">
+          <li>6 bombette cotte sulla brace</li>
+          <li>Contorno</li>
+          <li>Calice di vino</li>
+        </ul>
         <p class="valida">Valida ogni martedì sera</p>
         <a class="btn" href="#book">Voglio le bombette</a>
         <div class="fine">Una sola sera a settimana — posti limitati, di solito sold out</div>
