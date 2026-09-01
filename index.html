@@ -105,7 +105,7 @@ a{color:inherit}
 
 /* ---- OFFERTA ---- */
 .section{padding:36px 0}
-.offerta-titolo{color:var(--text);font-size:clamp(26px,3.6vw,40px);margin-bottom:16px}
+.offerta-badge{margin-bottom:16px}
 .offer{position:relative;display:grid;grid-template-columns:1.1fr .9fr;gap:34px;align-items:center;background:linear-gradient(160deg,#241813,#140f0d 70%);border:2px solid rgba(209,10,28,.55);border-radius:24px;padding:44px 34px;text-align:left;overflow:hidden;box-shadow:0 0 0 1px rgba(209,10,28,.12),0 24px 60px rgba(0,0,0,.5)}
 .offer-testo{position:relative;z-index:1}
 .offer h2.offer-title{font-size:clamp(44px,7.4vw,96px);line-height:.9;margin-bottom:20px}
@@ -141,7 +141,7 @@ a{color:inherit}
    Va dopo le regole .offer qui sopra, altrimenti verrebbe sovrascritta. */
 @media (max-width:700px){
   .offer{grid-template-columns:1fr;gap:24px;padding:38px 20px;border-radius:20px;text-align:center}
-  .offerta-titolo{text-align:center}
+  .offerta-badge{display:flex;margin-left:auto;margin-right:auto;width:max-content;max-width:100%}
   .offer p.desc{margin:0 auto 26px}
   .offer .price{margin-top:4px}
   /* Card centrata, ma le voci vanno allineate FRA LORO: centrandole una per
@@ -315,10 +315,9 @@ src="https://www.facebook.com/tr?id=1752658912398511&ev=PageView&noscript=1"
 <!-- OFFERTA -->
 <section class="section">
   <div class="wrap">
-    <h2 class="display offerta-titolo">La serata del martedì</h2>
+    <span class="badge offerta-badge"><span class="dot"></span>Solo il martedì sera</span>
     <div class="offer">
       <div class="offer-testo">
-        <span class="badge"><span class="dot"></span>Solo il martedì sera</span>
         <h2 class="display offer-title">
           <span class="pre">6 bombette cotte sulla brace</span>
           Bombette <span class="l2">Pugliesi</span>
