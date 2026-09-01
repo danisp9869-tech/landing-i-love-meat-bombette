@@ -161,8 +161,13 @@ a{color:inherit}
 .tile figcaption{text-shadow:0 2px 12px rgba(0,0,0,.85)}
 /* banco: foto principale grande a sinistra, seconda in colonna stretta */
 .banco{display:grid;grid-template-columns:1.7fr 1fr;gap:14px;height:440px}
-.cucina{margin-top:52px}
-.cucina h3{font-size:clamp(26px,4.4vw,44px);margin-bottom:12px}
+.cucina{margin-top:80px;background:#f5efe1;border-radius:20px;padding:40px 34px;color:#241c12}
+.cucina h3{font-size:clamp(26px,4.4vw,44px);margin-bottom:12px;color:#1f1810;text-align:center}
+/* Su fondo chiaro il grigio del testo introduttivo sparirebbe: qui serve un
+   marrone caldo, non la variabile --muted pensata per il fondo nero. */
+.cucina .intro{color:#6b6153;max-width:58ch;margin:0 auto 26px;text-align:center}
+.cucina .intro b{color:#241c12}
+.cucina .tile{border-color:rgba(31,24,16,.12);background:#eae3d3}
 /* galleria a incastro: due blocchi speculari, grande a sinistra poi grande a destra */
 .galleria{display:grid;grid-template-columns:repeat(6,1fr);grid-auto-rows:172px;gap:14px}
 .galleria .tile:nth-child(1){grid-column:1 / 5;grid-row:1 / 3}
@@ -183,6 +188,7 @@ a{color:inherit}
   .tile:nth-child(1){grid-row:1;grid-column:1 / span 2}
   .banco{grid-template-columns:1fr;grid-template-rows:250px 180px;height:auto}
   .banco .tile{grid-column:1}
+  .cucina{margin-top:56px;padding:28px 20px}
   .cucina .cta-row .btn{width:100%;max-width:360px}
   /* mobile: due larghe a tutta riga che incorniciano quattro tessere piccole */
   .galleria{grid-template-columns:1fr 1fr;grid-auto-rows:132px}
