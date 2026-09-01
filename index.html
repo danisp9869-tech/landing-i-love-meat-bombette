@@ -48,7 +48,7 @@ a{color:inherit}
 @media (max-width:600px){.nav .btn{padding:10px 18px;font-size:16px}}
 
 /* ---- HERO (testo sopra immagine scurita) ---- */
-.hero{position:relative;overflow:hidden;min-height:74vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:98px 0 60px}
+.hero{position:relative;overflow:hidden;min-height:88vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:98px 0 60px}
 /* piatto di bombette in 4:3: su schermi larghi "cover" taglia sopra e sotto,
    quindi tengo l'inquadratura appena sotto il centro per non perdere il piatto */
 .hero-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 56%;filter:brightness(.66) saturate(1.12) contrast(1.04);z-index:0}
@@ -64,9 +64,9 @@ a{color:inherit}
 @keyframes pulse-gold{0%{box-shadow:0 0 0 0 rgba(255,194,51,.5)}70%{box-shadow:0 0 0 7px rgba(255,194,51,0)}100%{box-shadow:0 0 0 0 rgba(255,194,51,0)}}
 /* foto più luminosa sotto: doppia ombra (una stretta, una larga) per tenere
    staccate le scritte senza dover riscurire l'immagine */
-.hero h1{font-size:clamp(64px,13vw,196px);text-shadow:0 2px 10px rgba(0,0,0,.85),0 4px 40px rgba(0,0,0,.75)}
+.hero h1{font-size:clamp(72px,14vw,220px);text-shadow:0 2px 10px rgba(0,0,0,.85),0 4px 40px rgba(0,0,0,.75)}
 .hero h1 .l2{color:var(--red)}
-.hero .lead{color:#f4ece3;font-size:19px;max-width:42ch;margin:24px auto 32px;text-shadow:0 1px 6px rgba(0,0,0,.9),0 2px 20px rgba(0,0,0,.8)}
+.hero .lead{color:#f4ece3;font-size:21px;max-width:44ch;margin:26px auto 34px;text-shadow:0 1px 6px rgba(0,0,0,.9),0 2px 20px rgba(0,0,0,.8)}
 .hero .cta-row{display:flex;align-items:center;justify-content:center;gap:22px;flex-wrap:wrap}
 .hero .rate{font-size:13.5px;color:#cfc6bc;text-shadow:0 1px 10px rgba(0,0,0,.8)}
 .hero .rate b{color:#fff}
@@ -74,14 +74,14 @@ a{color:inherit}
   .wrap{padding:0 20px}
   /* su mobile la barra resta scura e nel flusso, come prima */
   .nav{position:sticky;background:rgba(10,9,8,.82);backdrop-filter:blur(10px);border-bottom-color:var(--line)}
-  .hero{min-height:auto;padding:34px 0 44px}
+  .hero{min-height:78vh;padding:40px 0 52px}
   /* su schermo stretto "cover" ritaglia troppo: accorcio la foto così inquadra
      più larga e la sfumo in basso per non lasciare uno stacco netto. Appena più
      scura che su desktop: qui il testo copre gran parte della foto */
-  .hero-bg{height:78%;filter:brightness(.62) saturate(1.12) contrast(1.04);object-position:center 52%;
+  .hero-bg{height:88%;filter:brightness(.62) saturate(1.12) contrast(1.04);object-position:center 52%;
     -webkit-mask-image:linear-gradient(180deg,#000 68%,transparent 100%);
     mask-image:linear-gradient(180deg,#000 68%,transparent 100%)}
-  .hero .lead{font-size:17px}
+  .hero .lead{font-size:18px}
   .hero .cta-row{flex-direction:column;gap:18px}
   .hero .cta-row .btn{width:100%;max-width:360px;font-size:24px;padding:19px 24px}
   .hero .rate{text-align:center;font-size:14px}
@@ -92,14 +92,15 @@ a{color:inherit}
 /* Desktop: l'hero deve stare dentro la prima schermata e lasciar intravedere
    la sezione sotto. Su mobile resta com'è. */
 @media (min-width:1000px){
-  .hero{min-height:auto;padding:92px 0 40px}
-  .hero .badge{margin-bottom:14px}
-  .hero h1{font-size:clamp(64px,8.6vw,124px)}
-  .hero .lead{font-size:18px;margin:18px auto 26px}
+  .hero{min-height:86vh;padding:104px 0 56px}
+  .hero .badge{margin-bottom:18px}
+  .hero h1{font-size:clamp(76px,10.6vw,168px)}
+  .hero .lead{font-size:20px;margin:24px auto 32px}
 }
 @media (min-width:1000px) and (max-height:820px){
-  .hero h1{font-size:clamp(56px,7.4vw,104px)}
-  .hero .lead{margin:14px auto 22px}
+  .hero{min-height:82vh;padding:92px 0 44px}
+  .hero h1{font-size:clamp(64px,8.8vw,132px)}
+  .hero .lead{font-size:18px;margin:18px auto 26px}
 }
 
 /* ---- OFFERTA ---- */
