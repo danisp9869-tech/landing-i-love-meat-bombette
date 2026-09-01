@@ -636,23 +636,36 @@ window.LP_CONFIG = (function () {
   // visibili ma disabilitati, col motivo accanto.
   function renderSlots(){
     var date=dateEl.value, people=parseInt(peopleEl.value,10)||0;
+    // Finché non si sceglie il giorno gli orari si calcolano sul primo martedì
+    // disponibile (le opzioni[0] è "Seleziona il giorno", quindi la [1]).
+    // Un menu con dentro solo "Scegli un orario" sembra rotto: gli orari della
+    // serata sono gli stessi tutti i martedì, tanto vale mostrarli subito.
+    var riferimento = date || (dateEl.options.length>1 ? dateEl.options[1].value : "");
+    var scelto = slotInput.value;   // orario già selezionato, da non perdere
     slotInput.innerHTML="";
 
     var vuota=document.createElement("option");
     vuota.value=""; vuota.textContent="Scegli un orario";
     slotInput.appendChild(vuota);
 
-    if(!date||!people){ validate(); return; }
+    if(!riferimento||!people){ validate(); return; }
 
     ALL_SLOTS.forEach(function(slot){
-      var state=slotState(date,slot,people);
+      var state=slotState(riferimento,slot,people);
       var o=document.createElement("option");
       o.value=state?"":slot;
       o.textContent=state?(slot+" — "+state):slot;
       o.disabled=!!state;
       slotInput.appendChild(o);
     });
-    slotInput.value="";
+    // Se l'orario era già stato scelto e resta prenotabile, si tiene. Azzerarlo
+    // di nascosto dopo un cambio di giorno porta l'utente a premere "Conferma"
+    // con il campo vuoto senza capire cosa è successo.
+    var ancoraValido=false;
+    for(var k=0;k<slotInput.options.length;k++){
+      if(slotInput.options[k].value===scelto && scelto){ ancoraValido=true; break; }
+    }
+    slotInput.value = ancoraValido ? scelto : "";
     validate();
   }
 
