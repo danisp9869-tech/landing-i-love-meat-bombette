@@ -114,15 +114,28 @@ a{color:inherit}
 /* Desktop: l'hero deve stare dentro la prima schermata e lasciar intravedere
    la sezione sotto. Su mobile resta com'è. */
 @media (min-width:1000px){
-  .hero{min-height:86vh;padding:104px 0 56px}
-  .hero .badge{margin-bottom:18px}
-  .hero h1{font-size:clamp(76px,10.6vw,168px)}
-  .hero .lead{font-size:20px;margin:24px auto 32px}
+  /* Da desktop l'hero occupa esattamente una schermata: titolo, offerta,
+     prezzo e bottone devono stare tutti dentro senza scorrere. Le misure qui
+     sotto sono tarate perché la somma ci rientri anche su 1440x900. */
+  .hero{min-height:100vh;padding:92px 0 40px}
+  .hero .badge{margin-bottom:12px}
+  .hero h1{font-size:clamp(56px,7.4vw,116px)}
+  .hero .lead{font-size:18px;margin:16px auto 20px}
+  .hero .offerta-hero .prezzo{font-size:clamp(34px,4.3vw,60px);margin-top:8px}
+  .hero .solo-online{margin-bottom:10px}
+  .hero .cta-row .btn{font-size:20px;padding:14px 30px}
 }
+/* Portatili con schermo basso (13", barra dei preferiti aperta): stessa idea,
+   misure ancora più contenute perché l'altezza disponibile scende sotto i 700px */
 @media (min-width:1000px) and (max-height:820px){
-  .hero{min-height:82vh;padding:92px 0 44px}
-  .hero h1{font-size:clamp(64px,8.8vw,132px)}
-  .hero .lead{font-size:18px;margin:18px auto 26px}
+  .hero{padding:80px 0 28px}
+  .hero .badge{margin-bottom:10px}
+  .hero h1{font-size:clamp(46px,5.9vw,92px)}
+  .hero .lead{font-size:16.5px;margin:12px auto 16px}
+  .hero .offerta-hero .prezzo{font-size:clamp(28px,3.4vw,48px);margin-top:6px}
+  .hero .solo-online{font-size:11.5px;margin-bottom:8px}
+  .hero .cta-row .btn{font-size:18px;padding:12px 26px}
+  .hero .rate{font-size:12.5px}
 }
 
 /* ---- OFFERTA ---- */
