@@ -69,6 +69,17 @@ a{color:inherit}
 .hero h1{color:#fff;font-size:clamp(72px,14vw,220px);text-shadow:0 2px 10px rgba(0,0,0,.85),0 4px 40px rgba(0,0,0,.75)}
 .hero h1 .l2{color:var(--red)}
 .hero .lead{color:#f4ece3;font-size:21px;max-width:44ch;margin:26px auto 34px;text-shadow:0 1px 6px rgba(0,0,0,.9),0 2px 20px rgba(0,0,0,.8)}
+/* Il sottotitolo ora fa da vetrina all'offerta: tutto in grassetto perché deve
+   leggersi da lontano. Il prezzo pieno è barrato in rosso e quello scontato in
+   oro, gli stessi colori della card più in basso: chi scorre ritrova gli stessi
+   segnali invece di due linguaggi diversi per la stessa offerta. */
+.hero .offerta-hero{font-weight:700}
+.hero .offerta-hero .etichetta{display:block;color:var(--gold);letter-spacing:.04em;text-transform:uppercase;font-size:.8em}
+/* Il prezzo è il vero argomento: corpo da titolo, in Anton come l'hero.
+   Sotto ai 220px del titolo, ma abbastanza da leggersi prima del testo. */
+.hero .offerta-hero .prezzo{display:block;margin-top:12px;color:var(--gold);font-family:"Anton","Arial Narrow",sans-serif;font-weight:400;letter-spacing:.02em;line-height:1;font-size:clamp(42px,7.4vw,86px);text-shadow:0 2px 12px rgba(0,0,0,.7)}
+.hero .offerta-hero s{margin-right:10px;color:#cfc6bc;font-size:.72em;
+  text-decoration-line:line-through;text-decoration-color:var(--red);text-decoration-thickness:.1em}
 .hero .cta-row{display:flex;align-items:center;justify-content:center;gap:22px;flex-wrap:wrap}
 .hero .rate{font-size:13.5px;color:#cfc6bc;text-shadow:0 1px 10px rgba(0,0,0,.8)}
 .hero .rate b{color:#fff}
@@ -316,7 +327,11 @@ src="https://www.facebook.com/tr?id=1752658912398511&ev=PageView&noscript=1"
   <div class="wrap hero-inner">
     <span class="badge"><span class="dot"></span>a Pianezza (TO)</span>
     <h1 class="display">Il martedì<br>piovono<br><span class="l2">bombette.</span></h1>
-    <p class="lead">Martina Franca è arrivata a Pianezza.<br><b>Ogni martedì serata bombette</b></p>
+    <p class="lead offerta-hero">
+      <span class="etichetta">Offerta del martedì</span>
+      Cena completa con 6 bombette alla griglia + contorno + calice di vino
+      <span class="prezzo"><s>25€</s>a soli 18,90€</span>
+    </p>
     <div class="cta-row">
       <a class="btn" href="#book">Prenota ora</a>
       <div class="rate"><span class="stars">★★★★★</span><br><b>4.9</b> · 500+ carnivori soddisfatti</div>
