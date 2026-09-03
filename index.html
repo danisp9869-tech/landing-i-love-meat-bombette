@@ -80,6 +80,12 @@ a{color:inherit}
 .hero .offerta-hero .prezzo{display:block;margin-top:12px;color:var(--gold);font-family:"Anton","Arial Narrow",sans-serif;font-weight:400;letter-spacing:.02em;line-height:1;font-size:clamp(42px,7.4vw,86px);text-shadow:0 2px 12px rgba(0,0,0,.7)}
 .hero .offerta-hero s{margin-right:10px;color:#cfc6bc;font-size:.72em;
   text-decoration-line:line-through;text-decoration-color:var(--red);text-decoration-thickness:.1em}
+/* Condizione dell'offerta, sopra al bottone: maiuscolo per farsi notare ma
+   peso normale, così non compete con il prezzo appena sopra. */
+.hero .solo-online{font-weight:400;text-transform:uppercase;letter-spacing:.14em;font-size:12.5px;
+  color:var(--gold);margin:0 0 12px;text-shadow:0 1px 8px rgba(0,0,0,.85)}
+/* Etichetta lunga: due righe strette invece di una che esce dal bottone */
+.hero .cta-row .btn{line-height:1.08;text-align:center}
 .hero .cta-row{display:flex;align-items:center;justify-content:center;gap:22px;flex-wrap:wrap}
 .hero .rate{font-size:13.5px;color:#cfc6bc;text-shadow:0 1px 10px rgba(0,0,0,.8)}
 .hero .rate b{color:#fff}
@@ -332,8 +338,9 @@ src="https://www.facebook.com/tr?id=1752658912398511&ev=PageView&noscript=1"
       Cena completa con 6 bombette alla griglia + contorno + calice di vino
       <span class="prezzo"><s>25€</s>a soli 18,90€</span>
     </p>
+    <p class="solo-online">Solo se prenoti online</p>
     <div class="cta-row">
-      <a class="btn" href="#book">Prenota ora</a>
+      <a class="btn" href="#book">Riserva un tavolo e prenota&nbsp;offerta</a>
       <div class="rate"><span class="stars">★★★★★</span><br><b>4.9</b> · 500+ carnivori soddisfatti</div>
     </div>
   </div>
