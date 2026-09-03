@@ -379,10 +379,6 @@ src="https://www.facebook.com/tr?id=1752658912398511&ev=PageView&noscript=1"
         </div>
       </div>
       <div class="field">
-        <label for="email">Email</label>
-        <input type="email" id="email" autocomplete="email" placeholder="La tua email">
-      </div>
-      <div class="field">
         <label for="richieste">Richieste particolari <span class="opt">(facoltativo)</span></label>
         <input type="text" id="richieste" placeholder="Allergie, seggiolone, tavolo esterno…">
       </div>
@@ -583,7 +579,7 @@ window.LP_CONFIG = (function () {
   var ALL_SLOTS = LUNCH.concat(DINNER);
   var $ = function (id) { return document.getElementById(id); };
   var dateEl=$("data"),peopleEl=$("persone"),slotInput=$("orario"),
-      nameEl=$("nome"),phoneEl=$("telefono"),emailEl=$("email"),richiesteEl=$("richieste"),
+      nameEl=$("nome"),phoneEl=$("telefono"),richiesteEl=$("richieste"),
       privacyEl=$("privacy"),marketingEl=$("marketing"),ctaEl=$("cta"),errEl=$("err"),bookEl=$("book");
 
   var today=new Date(); today.setHours(0,0,0,0);
@@ -724,7 +720,7 @@ window.LP_CONFIG = (function () {
     if(!validate()){errEl.textContent="Compila i campi obbligatori e accetta la privacy.";return;}
     errEl.textContent="";
     var date=dateEl.value,people=peopleEl.value,slot=slotInput.value,nome=nameEl.value.trim(),tel=phoneEl.value.trim(),
-        email=emailEl.value.trim(),richieste=richiesteEl.value.trim();
+        richieste=richiesteEl.value.trim();
 
     // Se non è ancora configurato il foglio, mostra comunque la conferma
     if(!SHEET_URL){ showSuccess(date,people,slot,nome,tel); return; }
@@ -733,7 +729,7 @@ window.LP_CONFIG = (function () {
     ctaEl.disabled=true; ctaEl.textContent="Invio in corso…";
     var body=new URLSearchParams({
       data:date, ora:slot, persone:people, nome:nome, telefono:tel,
-      email:email, richieste:richieste, privacy:(privacyEl.checked?"Sì":"No"),
+      email:"", richieste:richieste, privacy:(privacyEl.checked?"Sì":"No"),
       marketing:(marketingEl.checked?"Sì":"No"),
       offerta:OFFER_TAG
     });
