@@ -52,9 +52,11 @@ a{color:inherit}
 /* piatto di bombette in 4:3: su schermi larghi "cover" taglia sopra e sotto,
    quindi tengo l'inquadratura appena sotto il centro per non perdere il piatto */
 .hero-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 56%;filter:brightness(.66) saturate(1.12) contrast(1.04);z-index:0}
-/* velo scuro: la foto si deve vedere, ma il copy le sta sopra e vince lui.
-   Pieno in fondo, dove serve anche a fondersi con la sezione sotto */
-.hero::before{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,rgba(10,9,8,.55),rgba(10,9,8,.3) 45%,rgba(10,9,8,.95) 97%)}
+/* Velo più marcato: il testo dell'hero è diventato lungo (offerta + invito)
+   e sopra la carne rosa si perdeva. Più scuro al centro, dove sta il copy. */
+.hero::before{content:"";position:absolute;inset:0;z-index:1;background:
+  radial-gradient(ellipse 70% 60% at 50% 50%,rgba(10,9,8,.45),rgba(10,9,8,0) 75%),
+  linear-gradient(180deg,rgba(10,9,8,.7),rgba(10,9,8,.55) 45%,rgba(10,9,8,.96) 97%)}
 .hero-inner{position:relative;z-index:2;max-width:1120px}
 /* Solo la pillola dell'hero è oro: gli altri badge della pagina ("Pochi tavoli
    rimasti") restano rossi. Il fondo scuro non lo tolgo, serve a staccare la
@@ -84,10 +86,11 @@ a{color:inherit}
 .hero .offerta-hero .prezzo{display:block;margin-top:12px;color:var(--gold);font-family:"Anton","Arial Narrow",sans-serif;font-weight:400;letter-spacing:.02em;line-height:1;font-size:clamp(42px,7.4vw,86px);text-shadow:0 2px 12px rgba(0,0,0,.7)}
 .hero .offerta-hero s{margin-right:10px;color:#cfc6bc;font-size:.72em;
   text-decoration-line:line-through;text-decoration-color:var(--red);text-decoration-thickness:.1em}
-/* Condizione dell'offerta, sopra al bottone: maiuscolo per farsi notare ma
-   peso normale, così non compete con il prezzo appena sopra. */
-.hero .solo-online{font-weight:400;text-transform:uppercase;letter-spacing:.14em;font-size:12.5px;
-  color:var(--gold);margin:0 0 12px;text-shadow:0 1px 8px rgba(0,0,0,.85)}
+/* Scarsità sopra al bottone: grande, in oro e in Anton come il prezzo, così
+   si legge insieme all'offerta ed è l'ultima cosa vista prima del clic. */
+.hero .coupon-disp{font-family:"Anton","Arial Narrow",sans-serif;font-weight:400;text-transform:uppercase;
+  letter-spacing:.03em;line-height:1;font-size:clamp(26px,5.2vw,40px);
+  color:var(--gold);margin:0 0 14px;text-shadow:0 2px 12px rgba(0,0,0,.8)}
 /* Etichetta lunga: due righe strette invece di una che esce dal bottone */
 .hero .cta-row .btn{line-height:1.08;text-align:center}
 .hero .cta-row{display:flex;align-items:center;justify-content:center;gap:22px;flex-wrap:wrap}
@@ -139,7 +142,7 @@ a{color:inherit}
   .hero .lead{font-size:19px;max-width:none;margin:14px auto 12px}
   .hero .sotto{font-size:18px;max-width:64ch;margin:0 auto 18px}
   .hero .offerta-hero .prezzo{font-size:clamp(34px,4.3vw,60px);margin-top:8px}
-  .hero .solo-online{margin-bottom:10px}
+  .hero .coupon-disp{font-size:clamp(28px,2.6vw,40px);margin-bottom:12px}
   /* Da desktop bottone e valutazione erano affiancati: il bottone finiva
      spostato a sinistra del centro. Impilati, il bottone sta al centro esatto
      e le stelle gli stanno sotto, come su mobile. */
@@ -156,7 +159,7 @@ a{color:inherit}
   .hero .sotto{font-size:16px;margin-bottom:14px}
   .hero .lead{font-size:16.5px;margin:12px auto 16px}
   .hero .offerta-hero .prezzo{font-size:clamp(28px,3.4vw,48px);margin-top:6px}
-  .hero .solo-online{font-size:11.5px;margin-bottom:8px}
+  .hero .coupon-disp{font-size:clamp(24px,2.2vw,32px);margin-bottom:10px}
   .hero .cta-row .btn{font-size:18px;padding:12px 26px}
   .hero .rate{font-size:12.5px}
 }
@@ -360,7 +363,7 @@ src="https://www.facebook.com/tr?id=1752658912398511&ev=PageView&noscript=1"
 <!-- NAV -->
 <nav class="nav">
   <div class="logo">I Love Meat<small>Per veri carnivori</small></div>
-  <a class="btn" href="#book">Prenota ora</a>
+  <a class="btn" href="#book">Riserva il coupon</a>
 </nav>
 
 <!-- HERO -->
@@ -374,9 +377,9 @@ src="https://www.facebook.com/tr?id=1752658912398511&ev=PageView&noscript=1"
       <span class="etichetta">Contorno e calice di vino inclusi</span>
     </p>
     <p class="sotto">Prenota un tavolo per martedì sera e prova le nostre bombette di Martina Franca: le puoi trovare solo da I Love Meat.</p>
-    <p class="solo-online">Solo se prenoti online</p>
+    <p class="coupon-disp">25 coupon disponibili</p>
     <div class="cta-row">
-      <a class="btn" href="#book">Riserva un tavolo e prenota&nbsp;offerta</a>
+      <a class="btn" href="#book">Riserva il coupon</a>
       <div class="rate"><span class="stars">★★★★★</span><br><b>4.9</b> · 500+ carnivori soddisfatti</div>
     </div>
   </div>
@@ -429,7 +432,7 @@ src="https://www.facebook.com/tr?id=1752658912398511&ev=PageView&noscript=1"
         <span>Acconsento a ricevere offerte, promozioni e comunicazioni commerciali del ristorante tramite i recapiti da me forniti, come indicato nell'<a href="https://www.iubenda.com/privacy-policy/46821789" class="iubenda-noiframe iubenda-embed" title="Informativa Privacy">Informativa Privacy</a>. Il consenso è facoltativo e può essere revocato in qualsiasi momento.</span>
       </label>
 
-      <button class="cta" id="cta" disabled>Conferma prenotazione</button>
+      <button class="cta" id="cta" disabled>Riserva il coupon</button>
       <div class="err" id="err"></div>
     </div>
   </div>
@@ -498,8 +501,8 @@ src="https://www.facebook.com/tr?id=1752658912398511&ev=PageView&noscript=1"
           <li>Calice di vino</li>
         </ul>
         <p class="valida">Valida ogni martedì sera</p>
-        <a class="btn" href="#book">Voglio le bombette</a>
-        <div class="fine">Una sola sera a settimana — posti limitati, di solito sold out</div>
+        <a class="btn" href="#book">Riserva il coupon</a>
+        <div class="fine">Una sola sera a settimana — 25 coupon disponibili, di solito sold out</div>
       </div>
       <figure class="offer-foto">
         <img src="bombette-banco.jpg" alt="Vassoi di bombette pugliesi di tutti i gusti al banco di I Love Meat" loading="lazy">
@@ -538,7 +541,7 @@ src="https://www.facebook.com/tr?id=1752658912398511&ev=PageView&noscript=1"
         <div class="tile"><img src="cucina-agnolotti.jpg" alt="Agnolotti al sugo d'arrosto" loading="lazy"></div>
         <div class="tile"><img src="cucina-orecchiette.jpg" alt="Orecchiette al pomodoro con briciole croccanti" loading="lazy"></div>
       </div>
-      <div class="cta-row"><a class="btn" href="#book">Prenota il tuo martedì</a></div>
+      <div class="cta-row"><a class="btn" href="#book">Riserva il coupon</a></div>
     </div>
   </div>
 </section>
@@ -773,7 +776,7 @@ window.LP_CONFIG = (function () {
       .then(function(){ showSuccess(date,people,slot,nome,tel); })
       .catch(function(){
         // Rete non disponibile: invita a chiamare, senza perdere la prenotazione
-        ctaEl.disabled=false; ctaEl.textContent="Conferma prenotazione";
+        ctaEl.disabled=false; ctaEl.textContent="Riserva il coupon";
         errEl.textContent="Connessione assente. Chiamaci per confermare: "+PHONE;
       });
   }
