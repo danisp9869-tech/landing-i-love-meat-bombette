@@ -285,7 +285,13 @@ a{color:inherit}
 /* ---- PRENOTAZIONE ---- */
 .book-sec{background:linear-gradient(180deg,#100c0a,#0a0908)}
 .book-head{text-align:center;margin-bottom:26px}
-.book-head h2{font-size:clamp(30px,5.4vw,58px);margin-top:6px}
+.book-head h2{font-size:clamp(30px,5.4vw,58px);margin:6px auto 0;max-width:18ch}
+/* Spiegazione sotto il titolo (come nella landing tagliata): deve leggersi
+   prima di compilare, quindi chiara e non grigia. Il vincolo della data in
+   grassetto. */
+.book-head .spiega{margin:14px auto 0;max-width:46ch;color:#ded6cc;font-size:16px;line-height:1.5}
+.book-head .spiega b{color:#fff}
+.book-head .quando{margin-top:12px;color:var(--muted);font-size:15px}
 /* In oro come la pillola dell'hero e i coupon: la scarsità parla con un solo colore */
 .book-head .badge{margin-top:14px;color:var(--gold);border-color:rgba(255,194,51,.55);background:rgba(255,194,51,.08)}
 .book-head .badge .dot{background:var(--gold);box-shadow:0 0 0 0 rgba(255,194,51,.6);animation-name:pulse-gold}
@@ -324,6 +330,12 @@ a{color:inherit}
 .success p{color:var(--ink-soft);font-size:15px}
 .success .det{margin-top:16px;background:var(--field);border:1px solid var(--bordo);border-radius:10px;padding:14px;text-align:left;font-size:15px;line-height:1.9}
 .success .det span{color:var(--ink-soft)}
+/* Richiesta di disdetta: sta sotto il riepilogo, staccata da una riga, con un
+   fondo appena acceso. Deve leggersi come una cortesia, non come una penale. */
+.success .disdetta{margin-top:14px;padding:12px 14px;background:rgba(209,10,28,.06);
+  border:1px solid rgba(209,10,28,.25);border-radius:10px;color:var(--ink-soft);
+  font-size:14px;line-height:1.5;text-align:left}
+.success .disdetta b{color:var(--ink)}
 .success .again{display:inline-block;margin-top:14px;color:var(--red);font-size:14px;text-decoration:none}
 
 /* ---- FOOTER ---- */
@@ -391,8 +403,9 @@ src="https://www.facebook.com/tr?id=1752658912398511&ev=PageView&noscript=1"
 <section class="section book-sec">
   <div class="wrap">
     <div class="book-head">
-      <span class="kicker">Prenota</span>
-      <h2 class="display">Prenota e riserva il tuo coupon privato</h2>
+      <h2 class="display">Prenota un tavolo e riscatta l'offerta</h2>
+      <p class="spiega">Compilando il form prenoti un tavolo a tuo nome e potrai usufruire del coupon. <b>Sarà valido solo per la data inserita.</b></p>
+      <p class="quando">Solo il martedì sera, dalle 19:30.</p>
       <span class="badge"><span class="dot"></span>Pochi coupon rimasti</span>
     </div>
 
@@ -744,15 +757,16 @@ window.LP_CONFIG = (function () {
     fbTrack("Lead"); // conversione: prenotazione completata
     bookEl.innerHTML=
       '<div class="success"><div class="ok">✓</div>'+
-      '<h3>Tavolo prenotato, '+nome.split(" ")[0]+'!</h3>'+
-      '<p>Ti aspettiamo martedì da I Love Meat per la serata bombette. Se serve ti chiamiamo per confermare.</p>'+
+      '<h3>Il tuo tavolo è pronto</h3>'+
+      '<p>Ti aspettiamo martedì da I Love Meat per la serata bombette.</p>'+
       '<div class="det">'+
         '<div><span>Data:</span> '+fmtDate(date)+'</div>'+
-        '<div><span>Persone:</span> '+people+'</div>'+
         '<div><span>Orario:</span> '+slot+'</div>'+
+        '<div><span>Persone:</span> '+people+'</div>'+
         '<div><span>A nome di:</span> '+nome+'</div>'+
         '<div><span>Telefono:</span> '+tel+'</div>'+
       '</div>'+
+      '<p class="disdetta">La tua prenotazione costituisce un tavolo riservato. Noi di I Love Meat cerchiamo sempre di fare il meglio per voi: per questo, <b>in caso di disdetta vi chiediamo di avvisarci in anticipo</b>, per garantire sempre il miglior servizio per tutti.</p>'+
       '<a class="again" href="tel:'+PHONE+'">Preferisci confermare a voce? Chiamaci</a></div>';
     bookEl.scrollIntoView({behavior:"smooth",block:"center"});
   }
