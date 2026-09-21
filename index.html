@@ -284,7 +284,8 @@ a{color:inherit}
 
 /* ---- PRENOTAZIONE ---- */
 .book-sec{background:linear-gradient(180deg,#100c0a,#0a0908)}
-.book-head{text-align:center;margin-bottom:26px}
+/* Margine di arrivo: il titolo non deve finire sotto la barra in alto */
+.book-head{text-align:center;margin-bottom:26px;scroll-margin-top:96px}
 .book-head h2{font-size:clamp(30px,5.4vw,58px);margin:6px auto 0;max-width:18ch}
 /* Spiegazione sotto il titolo (come nella landing tagliata): deve leggersi
    prima di compilare, quindi chiara e non grigia. Il vincolo della data in
@@ -377,7 +378,7 @@ src="https://www.facebook.com/tr?id=1752658912398511&ev=PageView&noscript=1"
 <!-- NAV -->
 <nav class="nav">
   <div class="logo">I Love Meat<small>Per veri carnivori</small></div>
-  <a class="btn" href="#book">Riserva il coupon</a>
+  <a class="btn" href="#prenota">Riserva il coupon</a>
 </nav>
 
 <!-- HERO -->
@@ -393,7 +394,7 @@ src="https://www.facebook.com/tr?id=1752658912398511&ev=PageView&noscript=1"
     <p class="sotto">Prenota un tavolo per martedì sera e prova le nostre bombette di Martina Franca: le puoi trovare solo da I Love Meat.</p>
     <p class="coupon-disp">25 coupon disponibili</p>
     <div class="cta-row">
-      <a class="btn" href="#book">Prenota un tavolo e riserva il&nbsp;coupon</a>
+      <a class="btn" href="#prenota">Prenota un tavolo e riserva il&nbsp;coupon</a>
       <div class="rate"><span class="stars">★★★★★</span><br><b>4.9</b> · 500+ carnivori soddisfatti</div>
     </div>
   </div>
@@ -402,7 +403,7 @@ src="https://www.facebook.com/tr?id=1752658912398511&ev=PageView&noscript=1"
 <!-- PRENOTAZIONE -->
 <section class="section book-sec">
   <div class="wrap">
-    <div class="book-head">
+    <div class="book-head" id="prenota">
       <h2 class="display">Prenota un tavolo e riscatta l'offerta</h2>
       <p class="spiega">Compilando il form prenoti un tavolo a tuo nome e potrai usufruire del coupon. <b>Sarà valido solo per la data inserita.</b></p>
       <p class="quando">Solo il martedì sera, dalle 19:30.</p>
@@ -516,7 +517,7 @@ src="https://www.facebook.com/tr?id=1752658912398511&ev=PageView&noscript=1"
           <li>Calice di vino</li>
         </ul>
         <p class="valida">Valida ogni martedì sera</p>
-        <a class="btn" href="#book">Riserva il coupon</a>
+        <a class="btn" href="#prenota">Riserva il coupon</a>
         <div class="fine">Una sola sera a settimana — 25 coupon disponibili, di solito sold out</div>
       </div>
       <figure class="offer-foto">
@@ -556,7 +557,7 @@ src="https://www.facebook.com/tr?id=1752658912398511&ev=PageView&noscript=1"
         <div class="tile"><img src="cucina-agnolotti.jpg" alt="Agnolotti al sugo d'arrosto" loading="lazy"></div>
         <div class="tile"><img src="cucina-orecchiette.jpg" alt="Orecchiette al pomodoro con briciole croccanti" loading="lazy"></div>
       </div>
-      <div class="cta-row"><a class="btn" href="#book">Riserva il coupon</a></div>
+      <div class="cta-row"><a class="btn" href="#prenota">Riserva il coupon</a></div>
     </div>
   </div>
 </section>
