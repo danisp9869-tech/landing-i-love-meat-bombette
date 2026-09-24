@@ -411,47 +411,15 @@ src="https://www.facebook.com/tr?id=1752658912398511&ev=PageView&noscript=1"
       <span class="badge"><span class="dot"></span>Pochi coupon rimasti</span>
     </div>
 
-    <div class="book" id="book" aria-label="Prenota il tavolo">
-      <div class="field">
-        <label for="data">1 · Quale martedì</label>
-        <select id="data" required></select>
-      </div>
-      <div class="field">
-        <label for="persone">2 · Quante persone</label>
-        <select id="persone" required></select>
-      </div>
-      <div class="field">
-        <label for="orario">3 · Orario</label>
-        <select id="orario" required></select>
-      </div>
-      <div class="grid2">
-        <div class="field">
-          <label for="nome">4 · Il tuo nome</label>
-          <input type="text" id="nome" autocomplete="name" placeholder="Nome e cognome" required>
-        </div>
-        <div class="field">
-          <label for="telefono">Telefono</label>
-          <input type="tel" id="telefono" autocomplete="tel" placeholder="Es. 345 688 1360" required>
-        </div>
-      </div>
-      <div class="field">
-        <label for="richieste">Richieste particolari <span class="opt">(facoltativo)</span></label>
-        <input type="text" id="richieste" placeholder="Allergie, seggiolone, tavolo esterno…">
-      </div>
-      <label class="privacy" for="privacy">
-        <input type="checkbox" id="privacy">
-        <span>Ho letto e accetto l'<a href="https://www.iubenda.com/privacy-policy/46821789" class="iubenda-noiframe iubenda-embed" title="Informativa sulla Privacy">Informativa sulla Privacy</a>.</span>
-      </label>
-
-      <!-- Consenso marketing FACOLTATIVO: non entra nella validazione, il tasto resta attivo -->
-      <label class="privacy optional" for="marketing">
-        <input type="checkbox" id="marketing">
-        <span>Acconsento a ricevere offerte, promozioni e comunicazioni commerciali del ristorante tramite i recapiti da me forniti, come indicato nell'<a href="https://www.iubenda.com/privacy-policy/46821789" class="iubenda-noiframe iubenda-embed" title="Informativa Privacy">Informativa Privacy</a>. Il consenso è facoltativo e può essere revocato in qualsiasi momento.</span>
-      </label>
-
-      <button class="cta" id="cta" disabled>Prenota un tavolo</button>
-      <div class="err" id="err"></div>
-    </div>
+    <!-- Prenotazioni gestite da Dinevo: l'iframe porta con sé data, orari,
+         disponibilità e privacy. La promozione è agganciata all'indirizzo. -->
+    <iframe
+      id="dinevo-booking"
+      src="https://api.dinevo.it/embed/r/est_e33a5577-5dea-4ff8-af37-250f70a276a0?promotion=promo_7e509008-f27c-4e0d-9e57-1ce2371bfa37"
+      title="Prenota un tavolo"
+      height="900"
+      style="width: 100%; border: 0; border-radius: 22px; overflow: hidden"
+    ></iframe>
   </div>
 </section>
 
@@ -599,219 +567,16 @@ src="https://www.facebook.com/tr?id=1752658912398511&ev=PageView&noscript=1"
   window.addEventListener("scroll", aggiorna, {passive:true});
 })();
 
-/* ====== CONFIG: cambia SOLO questo blocco ====== */
-window.LP_CONFIG = (function () {
-  var booked = {}; // nessuna prenotazione simulata: tutti gli orari disponibili
-  return {
-    capacity: 60,        // coperti totali della serata
-    gap: 0,              // margine oltre la capienza (0 = mai overbooking)
-    phone: "+393456881360",
-    // URL dell'app Google Apps Script che scrive nel foglio (link "/exec")
-    sheetUrl: "https://script.google.com/macros/s/AKfycbyCVTPWs0z8ZCcdUy3e2j_WC8bWwWa2U4u-LCbhEfsFxL3ErGv2zX8V0OzVZi_Rl6j0Zg/exec",
-    // Ad agosto il ristorante è aperto solo a cena: la lista del pranzo è vuota
-    // di proposito. Per riaprirlo basta rimettere qui gli orari.
-    lunch: [],
-    dinner: ["19:30","20:00","20:30","21:00","21:30","22:00","22:30","23:00","23:30"],
-    offerName: "Bombette Pugliesi",
-    // Finisce nella colonna "Offerta" del foglio, condiviso con la degustazione.
-    // Tenerla corta e sempre uguale: serve a filtrare, non a essere letta.
-    offerTag: "Bombette",
-    booked: booked
-  };
-})();
-
-/* ====== LOGICA PRENOTAZIONE (invariata: collegata al Google Sheet) ====== */
-(function () {
-  var C = window.LP_CONFIG || {};
-  var CAPACITY = C.capacity != null ? C.capacity : 80;
-  var GAP = C.gap != null ? C.gap : 0;
-  var PHONE = C.phone || "+393456881360";
-  var SHEET_URL = (C.sheetUrl && C.sheetUrl.indexOf("http")===0) ? C.sheetUrl : "";
-  var OFFER = C.offerName || "Bombette Pugliesi";
-  var OFFER_TAG = C.offerTag || "Bombette";
-  var LUNCH = C.lunch || [];   // vuoto: ad agosto si prenota solo la cena
-  var DINNER = C.dinner || ["19:30","20:00","20:30","21:00","21:30","22:00","22:30","23:00","23:30"];
-  var BOOKED = C.booked || {};
-  var ALL_SLOTS = LUNCH.concat(DINNER);
-  var $ = function (id) { return document.getElementById(id); };
-  var dateEl=$("data"),peopleEl=$("persone"),slotInput=$("orario"),
-      nameEl=$("nome"),phoneEl=$("telefono"),richiesteEl=$("richieste"),
-      privacyEl=$("privacy"),marketingEl=$("marketing"),ctaEl=$("cta"),errEl=$("err"),bookEl=$("book");
-
-  var today=new Date(); today.setHours(0,0,0,0);
-  // Data locale in formato YYYY-MM-DD: toISOString() userebbe UTC e in Italia
-  // (UTC+1/+2) tornerebbe il giorno prima, precompilando una data già passata.
-  var iso=function(d){var m=d.getMonth()+1,g=d.getDate();return d.getFullYear()+"-"+(m<10?"0":"")+m+"-"+(g<10?"0":"")+g;};
-  // La serata bombette è solo il martedì (0=dom, 1=lun, 2=mar …). È l'unica
-  // regola che decide quali giorni sono prenotabili: cambiando questo numero
-  // si sposta la serata, senza toccare altro.
-  var GIORNO_SERATA = 2;
-  var MARTEDI_MOSTRATI = 10;   // ~2 mesi e mezzo di serate
-  function giornoDi(s){var q=s.split("-");return new Date(+q[0],+q[1]-1,+q[2]).getDay();}
-  function eSerata(s){return giornoDi(s)===GIORNO_SERATA;}
-
-  // Elenco a tendina invece del calendario: <input type="date"> non sa
-  // disabilitare i giorni della settimana, quindi lasciava cliccare qualsiasi
-  // data per poi spostarla dopo. Qui i non-martedì non esistono proprio.
-  var MESI=["gennaio","febbraio","marzo","aprile","maggio","giugno","luglio",
-            "agosto","settembre","ottobre","novembre","dicembre"];
-  function etichettaData(s){
-    var q=s.split("-"); var d=new Date(+q[0],+q[1]-1,+q[2]);
-    var testo="martedì "+d.getDate()+" "+MESI[d.getMonth()];
-    return d.getFullYear()!==today.getFullYear() ? testo+" "+d.getFullYear() : testo;
-  }
-  function riempiMartedi(){
-    var d=new Date(today), trovati=0;
-    dateEl.innerHTML="";
-    var invito=document.createElement("option");
-    invito.value=""; invito.textContent="Seleziona il giorno";
-    dateEl.appendChild(invito);
-    // Il martedì di oggi entra solo se ha ancora un orario libero: a serata
-    // iniziata la prima voce dev'essere già la settimana dopo.
-    for(var i=0;i<120 && trovati<MARTEDI_MOSTRATI;i++){
-      var s=iso(d);
-      if(eSerata(s) && hasFreeSlot(s,1)){
-        var o=document.createElement("option");
-        o.value=s; o.textContent=etichettaData(s);
-        dateEl.appendChild(o); trovati++;
-      }
-      d.setDate(d.getDate()+1);
-    }
-  }
-
-  for(var n=1;n<=20;n++){var o=document.createElement("option");o.value=n;o.textContent=n+(n===1?" persona":" persone");peopleEl.appendChild(o);}
-  peopleEl.value="2";
-
-  // All'apertura si parte dal primo martedì disponibile, che è la prima voce
-  riempiMartedi();
-
-  function bookedFor(date,slot){return (BOOKED[date]&&BOOKED[date][slot])?BOOKED[date][slot]:0;}
-
-  // Perché un orario non è prenotabile: "" = libero, altrimenti il motivo mostrato sul tasto
-  function slotState(date,slot,people){
-    // La regola "sabato pranzo chiuso" non serve più: con LUNCH vuoto restano
-    // solo orari di cena, aperti tutti i giorni. Torna utile se si riapre a pranzo.
-    if(LUNCH.length && new Date(+date.split("-")[0],+date.split("-")[1]-1,+date.split("-")[2]).getDay()===6
-       && LUNCH.indexOf(slot)>=0) return "chiuso";
-    var now=new Date();
-    if(date===iso(now)){                                                   // orario già trascorso
-      var hm=slot.split(":");
-      if((+hm[0]*60 + +hm[1])<=(now.getHours()*60+now.getMinutes())) return "passato";
-    }
-    if((bookedFor(date,slot)+people)>(CAPACITY+GAP)) return "esaurito";
-    return "";
-  }
-
-  function hasFreeSlot(date,people){
-    if(!eSerata(date)) return false;   // aperto sì, ma la serata bombette è il martedì
-    for(var i=0;i<ALL_SLOTS.length;i++){ if(!slotState(date,ALL_SLOTS[i],people)) return true; }
-    return false;
-  }
-
-  // Gli orari stanno in un menu a tendina: quelli non prenotabili restano
-  // visibili ma disabilitati, col motivo accanto.
-  function renderSlots(){
-    var date=dateEl.value, people=parseInt(peopleEl.value,10)||0;
-    // Finché non si sceglie il giorno gli orari si calcolano sul primo martedì
-    // disponibile (le opzioni[0] è "Seleziona il giorno", quindi la [1]).
-    // Un menu con dentro solo "Scegli un orario" sembra rotto: gli orari della
-    // serata sono gli stessi tutti i martedì, tanto vale mostrarli subito.
-    var riferimento = date || (dateEl.options.length>1 ? dateEl.options[1].value : "");
-    var scelto = slotInput.value;   // orario già selezionato, da non perdere
-    slotInput.innerHTML="";
-
-    var vuota=document.createElement("option");
-    vuota.value=""; vuota.textContent="Scegli un orario";
-    slotInput.appendChild(vuota);
-
-    if(!riferimento||!people){ validate(); return; }
-
-    ALL_SLOTS.forEach(function(slot){
-      var state=slotState(riferimento,slot,people);
-      var o=document.createElement("option");
-      o.value=state?"":slot;
-      o.textContent=state?(slot+" — "+state):slot;
-      o.disabled=!!state;
-      slotInput.appendChild(o);
-    });
-    // Se l'orario era già stato scelto e resta prenotabile, si tiene. Azzerarlo
-    // di nascosto dopo un cambio di giorno porta l'utente a premere "Conferma"
-    // con il campo vuoto senza capire cosa è successo.
-    var ancoraValido=false;
-    for(var k=0;k<slotInput.options.length;k++){
-      if(slotInput.options[k].value===scelto && scelto){ ancoraValido=true; break; }
-    }
-    slotInput.value = ancoraValido ? scelto : "";
-    validate();
-  }
-
-  function validate(){
-    var ok=dateEl.value&&peopleEl.value&&slotInput.value&&nameEl.value.trim().length>=2&&phoneEl.value.trim().length>=6&&privacyEl.checked;
-    if(ctaEl) ctaEl.disabled=!ok; return ok;
-  }
-  function fmtDate(s){var p=s.split("-");return p[2]+"/"+p[1]+"/"+p[0];}
-
-  function fbTrack(ev){ try{ if(typeof fbq==="function") fbq("track",ev); }catch(e){} }
-  var checkoutStarted=false;
-  function startCheckout(){ if(checkoutStarted) return; checkoutStarted=true; fbTrack("InitiateCheckout"); } // inizio prenotazione
-
-  function showSuccess(date,people,slot,nome,tel){
-    fbTrack("Lead"); // conversione: prenotazione completata
-    bookEl.innerHTML=
-      '<div class="success"><div class="ok">✓</div>'+
-      '<h3>Il tuo tavolo è pronto</h3>'+
-      '<p>Ti aspettiamo martedì da I Love Meat per la serata bombette.</p>'+
-      '<p class="valid-note">Il coupon sarà valido solo per la data che hai inserito.</p>'+
-      '<div class="det">'+
-        '<div><span>Data:</span> '+fmtDate(date)+'</div>'+
-        '<div><span>Orario:</span> '+slot+'</div>'+
-        '<div><span>Persone:</span> '+people+'</div>'+
-        '<div><span>A nome di:</span> '+nome+'</div>'+
-        '<div><span>Telefono:</span> '+tel+'</div>'+
-      '</div>'+
-      '<p class="disdetta">La tua prenotazione costituisce un tavolo riservato. Noi di I Love Meat cerchiamo sempre di fare il meglio per voi: per questo, <b>in caso di disdetta vi chiediamo di avvisarci in anticipo</b>, per garantire sempre il miglior servizio per tutti.</p>'+
-      '<a class="again" href="tel:'+PHONE+'">Preferisci confermare a voce? Chiamaci</a></div>';
-    bookEl.scrollIntoView({behavior:"smooth",block:"center"});
-  }
-
-  function submit(){
-    if(!validate()){errEl.textContent="Compila i campi obbligatori e accetta la privacy.";return;}
-    errEl.textContent="";
-    var date=dateEl.value,people=peopleEl.value,slot=slotInput.value,nome=nameEl.value.trim(),tel=phoneEl.value.trim(),
-        richieste=richiesteEl.value.trim();
-
-    // Se non è ancora configurato il foglio, mostra comunque la conferma
-    if(!SHEET_URL){ showSuccess(date,people,slot,nome,tel); return; }
-
-    // Invia la prenotazione al Google Sheet (Apps Script)
-    ctaEl.disabled=true; ctaEl.textContent="Invio in corso…";
-    var body=new URLSearchParams({
-      data:date, ora:slot, persone:people, nome:nome, telefono:tel,
-      email:"", richieste:richieste, privacy:(privacyEl.checked?"Sì":"No"),
-      marketing:(marketingEl.checked?"Sì":"No"),
-      offerta:OFFER_TAG
-    });
-    fetch(SHEET_URL,{method:"POST",mode:"no-cors",body:body})
-      .then(function(){ showSuccess(date,people,slot,nome,tel); })
-      .catch(function(){
-        // Rete non disponibile: invita a chiamare, senza perdere la prenotazione
-        ctaEl.disabled=false; ctaEl.textContent="Prenota un tavolo";
-        errEl.textContent="Connessione assente. Chiamaci per confermare: "+PHONE;
-      });
-  }
-
-  // Apre il calendario toccando tutto il campo data (non solo l'iconcina)
-  dateEl.addEventListener("change",function(){startCheckout();errEl.textContent="";renderSlots();});
-  peopleEl.addEventListener("change",function(){startCheckout();renderSlots();});
-  slotInput.addEventListener("change",function(){startCheckout();validate();});
-  nameEl.addEventListener("input",function(){startCheckout();validate();});
-  phoneEl.addEventListener("input",function(){startCheckout();validate();});
-  privacyEl.addEventListener("change",validate);
-  ctaEl.addEventListener("click",submit);
-  var cl=$("call-link"); if(cl) cl.href="tel:"+PHONE;
-
-  renderSlots();
-})();
+/* Altezza dell'iframe: Dinevo comunica quanto spazio gli serve e il riquadro
+   si adatta, così non restano bande vuote né barre di scorrimento interne. */
+window.addEventListener('message', function (event) {
+  if (!event.data || event.data.type !== 'dinevo:booking-height') return;
+  var frame = document.getElementById('dinevo-booking');
+  if (!frame) return;
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!reduce) frame.style.transition = 'height 0.2s ease';
+  frame.style.height = event.data.height + 'px';
+});
 </script>
 <!-- Iubenda I Love Meat: banner cookie + loader policy -->
 <script type="text/javascript" src="https://embeds.iubenda.com/widgets/97822096-e054-4146-9989-b79928a6b141.js"></script>
