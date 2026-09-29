@@ -577,6 +577,18 @@ window.addEventListener('message', function (event) {
   if (!reduce) frame.style.transition = 'height 0.2s ease';
   frame.style.height = event.data.height + 'px';
 });
+/* Conversione: Dinevo avvisa quando la prenotazione è confermata dentro
+   l'iframe, e qui la si gira al pixel come Purchase. Il controllo su
+   event.source accetta solo i messaggi che arrivano da QUEL riquadro: senza,
+   qualunque altra finestra potrebbe far scattare una conversione falsa. */
+if (typeof window.fbq === 'function') {
+  window.addEventListener('message', function (event) {
+    if (!event.data || event.data.type !== 'dinevo:booking-confirmed') return;
+    var frame = document.getElementById('dinevo-booking');
+    if (!frame || event.source !== frame.contentWindow) return;
+    window.fbq('track', 'Purchase', { value: 0, currency: 'EUR' });
+  });
+}
 </script>
 <!-- Iubenda I Love Meat: banner cookie + loader policy -->
 <script type="text/javascript" src="https://embeds.iubenda.com/widgets/97822096-e054-4146-9989-b79928a6b141.js"></script>
