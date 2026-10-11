@@ -88,7 +88,7 @@ a{color:inherit}
   text-decoration-line:line-through;text-decoration-color:var(--red);text-decoration-thickness:.1em}
 /* Scarsità sopra al bottone: grande, in oro e in Anton come il prezzo, così
    si legge insieme all'offerta ed è l'ultima cosa vista prima del clic. */
-.hero .coupon-disp{font-family:"Anton","Arial Narrow",sans-serif;font-weight:400;text-transform:uppercase;
+.hero .scarsita{font-family:"Anton","Arial Narrow",sans-serif;font-weight:400;text-transform:uppercase;
   letter-spacing:.03em;line-height:1;font-size:clamp(26px,5.2vw,40px);
   color:var(--gold);margin:0 0 14px;text-shadow:0 2px 12px rgba(0,0,0,.8)}
 /* Etichetta lunga: due righe strette invece di una che esce dal bottone */
@@ -142,7 +142,7 @@ a{color:inherit}
   .hero .lead{font-size:19px;max-width:none;margin:14px auto 12px}
   .hero .sotto{font-size:18px;max-width:64ch;margin:0 auto 18px}
   .hero .offerta-hero .prezzo{font-size:clamp(34px,4.3vw,60px);margin-top:8px}
-  .hero .coupon-disp{font-size:clamp(28px,2.6vw,40px);margin-bottom:12px}
+  .hero .scarsita{font-size:clamp(28px,2.6vw,40px);margin-bottom:12px}
   /* Da desktop bottone e valutazione erano affiancati: il bottone finiva
      spostato a sinistra del centro. Impilati, il bottone sta al centro esatto
      e le stelle gli stanno sotto, come su mobile. */
@@ -159,7 +159,7 @@ a{color:inherit}
   .hero .sotto{font-size:16px;margin-bottom:14px}
   .hero .lead{font-size:16.5px;margin:12px auto 16px}
   .hero .offerta-hero .prezzo{font-size:clamp(28px,3.4vw,48px);margin-top:6px}
-  .hero .coupon-disp{font-size:clamp(24px,2.2vw,32px);margin-bottom:10px}
+  .hero .scarsita{font-size:clamp(24px,2.2vw,32px);margin-bottom:10px}
   .hero .cta-row .btn{font-size:18px;padding:12px 26px}
   .hero .rate{font-size:12.5px}
 }
@@ -293,7 +293,7 @@ a{color:inherit}
 .book-head .spiega{margin:14px auto 0;max-width:46ch;color:#ded6cc;font-size:16px;line-height:1.5}
 .book-head .spiega b{color:#fff}
 .book-head .quando{margin-top:12px;color:var(--muted);font-size:15px}
-/* In oro come la pillola dell'hero e i coupon: la scarsità parla con un solo colore */
+/* In oro come la pillola dell'hero: la scarsità parla con un solo colore */
 .book-head .badge{margin-top:14px;color:var(--gold);border-color:rgba(255,194,51,.55);background:rgba(255,194,51,.08)}
 .book-head .badge .dot{background:var(--gold);box-shadow:0 0 0 0 rgba(255,194,51,.6);animation-name:pulse-gold}
 /* card bianca: dentro serve tutta la scala di colori invertita rispetto al resto */
@@ -379,7 +379,7 @@ src="https://www.facebook.com/tr?id=1752658912398511&ev=PageView&noscript=1"
 <!-- NAV -->
 <nav class="nav">
   <div class="logo">I Love Meat<small>Per veri carnivori</small></div>
-  <a class="btn" href="#prenota">Riserva il coupon</a>
+  <a class="btn" href="#prenota">Prenota un tavolo</a>
 </nav>
 
 <!-- HERO -->
@@ -393,9 +393,9 @@ src="https://www.facebook.com/tr?id=1752658912398511&ev=PageView&noscript=1"
       <span class="etichetta">Piatto bombette, contorno e calice di vino inclusi</span>
     </p>
     <p class="sotto">Prenota un tavolo per martedì sera e prova le nostre bombette di Martina Franca: le puoi trovare solo da I Love Meat.</p>
-    <p class="coupon-disp">25 coupon disponibili</p>
+    <p class="scarsita">Pochi tavoli disponibili</p>
     <div class="cta-row">
-      <a class="btn" href="#prenota">Prenota un tavolo e riserva il&nbsp;coupon</a>
+      <a class="btn" href="#prenota">Prenota un tavolo</a>
       <div class="rate"><span class="stars">★★★★★</span><br><b>4.9</b> · 500+ carnivori soddisfatti</div>
     </div>
   </div>
@@ -406,9 +406,9 @@ src="https://www.facebook.com/tr?id=1752658912398511&ev=PageView&noscript=1"
   <div class="wrap">
     <div class="book-head" id="prenota">
       <h2 class="display">Prenota un tavolo e riscatta l'offerta</h2>
-      <p class="spiega">Compilando il form prenoti un tavolo a tuo nome e potrai usufruire del coupon. <b>Sarà valido solo per la data inserita.</b></p>
+      <p class="spiega">Compilando il form prenoti un tavolo a tuo nome. <b>L’offerta è valida solo per la data inserita.</b></p>
       <p class="quando">Solo il martedì sera, dalle 19:30.</p>
-      <span class="badge"><span class="dot"></span>Pochi coupon rimasti</span>
+      <span class="badge"><span class="dot"></span>Pochi tavoli disponibili</span>
     </div>
 
     <!-- Prenotazioni gestite da Dinevo: l'iframe porta con sé data, orari,
@@ -486,8 +486,8 @@ src="https://www.facebook.com/tr?id=1752658912398511&ev=PageView&noscript=1"
           <li>Calice di vino</li>
         </ul>
         <p class="valida">Valida ogni martedì sera</p>
-        <a class="btn" href="#prenota">Riserva il coupon</a>
-        <div class="fine">Una sola sera a settimana — 25 coupon disponibili, di solito sold out</div>
+        <a class="btn" href="#prenota">Prenota un tavolo</a>
+        <div class="fine">Una sola sera a settimana — pochi tavoli disponibili, di solito sold out</div>
       </div>
       <figure class="offer-foto">
         <img src="bombette-banco.jpg" alt="Vassoi di bombette pugliesi di tutti i gusti al banco di I Love Meat" loading="lazy">
@@ -526,7 +526,7 @@ src="https://www.facebook.com/tr?id=1752658912398511&ev=PageView&noscript=1"
         <div class="tile"><img src="cucina-agnolotti.jpg" alt="Agnolotti al sugo d'arrosto" loading="lazy"></div>
         <div class="tile"><img src="cucina-orecchiette.jpg" alt="Orecchiette al pomodoro con briciole croccanti" loading="lazy"></div>
       </div>
-      <div class="cta-row"><a class="btn" href="#prenota">Riserva il coupon</a></div>
+      <div class="cta-row"><a class="btn" href="#prenota">Prenota un tavolo</a></div>
     </div>
   </div>
 </section>
