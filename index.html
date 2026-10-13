@@ -582,17 +582,21 @@ window.addEventListener('message', function (event) {
   frame.style.height = event.data.height + 'px';
 });
 /* Conversione: Dinevo avvisa quando la prenotazione è confermata dentro
-   l'iframe, e qui la si gira al pixel come Purchase. Il controllo su
-   event.source accetta solo i messaggi che arrivano da QUEL riquadro: senza,
-   qualunque altra finestra potrebbe far scattare una conversione falsa. */
-if (typeof window.fbq === 'function') {
-  window.addEventListener('message', function (event) {
-    if (!event.data || event.data.type !== 'dinevo:booking-confirmed') return;
-    var frame = document.getElementById('dinevo-booking');
-    if (!frame || event.source !== frame.contentWindow) return;
-    window.fbq('track', 'Purchase', { value: 0, currency: 'EUR' });
-  });
-}
+   l'iframe, e qui la si gira al pixel come Schedule.
+   L'ascoltatore si registra SEMPRE e il pixel si controlla al momento del
+   messaggio: con Iubenda che blocca il tracciamento fino al consenso, al
+   caricamento fbq può non esistere ancora, e un controllo fatto qui fuori
+   avrebbe impedito per sempre la registrazione.
+   Il controllo su event.source accetta solo i messaggi che arrivano da QUEL
+   riquadro: senza, qualunque altra finestra potrebbe far scattare una
+   conversione falsa. */
+window.addEventListener('message', function (event) {
+  if (!event.data || event.data.type !== 'dinevo:booking-confirmed') return;
+  if (typeof window.fbq !== 'function') return;
+  var frame = document.getElementById('dinevo-booking');
+  if (!frame || event.source !== frame.contentWindow) return;
+  window.fbq('track', 'Schedule');
+});
 </script>
 </body>
 </html>
